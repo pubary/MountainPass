@@ -1,11 +1,12 @@
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from mtpass.settings import DEBUG, MEDIA_ROOT, MEDIA_URL
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('pereval.urls'))
 ]
 
 if DEBUG:

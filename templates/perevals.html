@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+    {% if perevals %}
+        <table>
+            {% for pereval in perevals %}
+                <tr>
+                    <td>______</td>
+                    <td>Название______</td>
+                    <td>________________________</td>
+                    <td>Статус</td>
+                </tr>
+                <tr>
+                    <td>{{ pereval.beauty_title }}</td>
+                    <td><a href="{% url 'pereval' pk=pereval.pk %}">{{ pereval.title }}</a></td>
+                    <td>{{ pereval.other_titles }}</td>
+                    <td>{{ pereval.status }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <center>
+           <h2>Данных нет!</h2>
+        </center>
+    {% endif %}
+</body>
+</html>

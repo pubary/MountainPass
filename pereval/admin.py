@@ -27,9 +27,13 @@ class LevelAdmin(admin.ModelAdmin):
     list_display_links = ('pk',)
 
 
+class TouristAdmin(admin.ModelAdmin):
+    list_display = ('tourist', 'pereval')
+
 admin.site.register(Users, UsersAdmin)
 admin.site.register(Added, AddedAdmin)
-admin.site.register(Tourist)
+admin.site.register(Tourist, TouristAdmin)
 admin.site.register(Coords, CoordsAdmin)
 admin.site.register(Level, LevelAdmin)
 admin.site.register(Images)
+

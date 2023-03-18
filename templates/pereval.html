@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <ul>{{ pereval.beauty_title }} {{ pereval.title }}. {{ pereval.other_titles }}</ul>
+    <ul>высота {{ pereval.coord_id.height }}</ul>
+    <ul>широта {{ pereval.coord_id.latitude }}</ul>
+    <ul>долгота {{ pereval.coord_id.longitude }}</ul>
+    <ul>трудность восхождения:</ul>
+    <ul>зимой - {{ pereval.level_id.level_winter }}</ul>
+    <ul>весной - {{ pereval.level_id.level_spring }}</ul>
+    <ul>летом - {{ pereval.level_id.level_summer }}</ul>
+    <ul>осенью - {{ pereval.level_id.level_autumn }}</ul>
+    <ul>{{ pereval.add_time|date:'d.m.Y H:i' }}</ul>
+    <ul>{{ pereval.status }}</ul>
+    {% if images %}
+        {% for image in images %}
+            <ul><img src="{{image.foto.url}}"></ul>
+            <ul>{{ image.title }}</ul>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
+
