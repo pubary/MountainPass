@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'pereval.apps.PerevalConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -127,5 +130,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SITE_ID = 1
 
-AUTH_USER_MODEL = 'pass.Users'
+AUTH_USER_MODEL = 'pereval.Users'
 
