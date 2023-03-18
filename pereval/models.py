@@ -33,8 +33,8 @@ class Users(AbstractUser):
 
 
 class Coords(models.Model):
-    latitude = models.DecimalField(decimal_places=3, max_digits=4, null=True, blank=True)
-    longitude = models.DecimalField(decimal_places=3, max_digits=4, null=True, blank=True)
+    latitude = models.DecimalField(decimal_places=4, max_digits=7, null=True, blank=True)
+    longitude = models.DecimalField(decimal_places=4, max_digits=7, null=True, blank=True)
     height = models.PositiveSmallIntegerField(null=True, blank=True)
 
 
@@ -49,7 +49,7 @@ class Added(models.Model):
     beauty_title = models.CharField(max_length=128, )
     title = models.CharField(max_length=128, )
     other_titles = models.CharField(max_length=128, )
-    connect = models.CharField(max_length=128, )
+    connect = models.CharField(max_length=128, blank=True)
     add_time = models.DateTimeField(auto_now_add=True, )
     status = models.CharField(max_length=16, default='new',)
     coord_id = models.OneToOneField(Coords, blank=True, on_delete=models.SET_NULL, null=True)

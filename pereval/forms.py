@@ -19,3 +19,4 @@ class UsersChangeForm(UserChangeForm):
     class Meta:
         model = Users
         fields = ('username', )
+
