@@ -6,10 +6,11 @@ from django.db.models.functions import Lower
 class Users(AbstractUser):
     email = models.EmailField(
         "email address",
+        primary_key=True,
         max_length=128,
         unique=True,
         null=False,
-        primary_key=True
+        blank=False
     )
     username = models.CharField(
         "login",
@@ -17,17 +18,15 @@ class Users(AbstractUser):
         unique=True,
         editable=True,
     )
-    first_name = models.CharField('name', max_length=150,)
-    last_name = models.CharField('fam', max_length=150, blank=True)
-    fath_name = models.CharField('otc', max_length=150, blank=True)
+    first_name = models.CharField('name', max_length=128,)
+    last_name = models.CharField('fam', max_length=128, blank=True)
+    fath_name = models.CharField('otc', max_length=128, blank=True)
     phone = models.CharField('phone', max_length=32,)
-
 
     class Meta(AbstractUser.Meta):
         constraints = [
             models.UniqueConstraint(
                 Lower('email'),
-                fields=['email', ],
                 name='unique_email',
             ),
         ]
@@ -62,3 +61,9 @@ class Images(models.Model):
     title = models.CharField(max_length=64, )
     foto = models.ImageField(upload_to='photo/%Y/%m/%d/', blank=True, )
     added_date = models.DateTimeField(auto_now_add=True, )
+
+
+class Tourist(models.Model):
+    tourist = models.OneToOneField(Users, on_delete=models.CASCADE)
+    pereval = models.ForeignKey(Added, on_delete=models.CASCADE)
+
