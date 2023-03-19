@@ -1,15 +1,10 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .forms import UsersCreationForm, UsersChangeForm
-from .models import Users, Added, Tourist, Coords, Level, Images
+from .models import User, Added, Tourist, Coords, Level, Images
 
 
-class UsersAdmin(UserAdmin):
-    add_form = UsersCreationForm
-    form = UsersChangeForm
-    model = Users
-    list_display = ['email', 'username', 'first_name', 'last_name', 'fath_name']
-    list_display_links = ('email', 'username',)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['email', 'fam', 'name', 'otc']
+    list_display_links = ('email', 'fam',)
 
 
 class AddedAdmin(admin.ModelAdmin):
@@ -23,14 +18,14 @@ class CoordsAdmin(admin.ModelAdmin):
 
 
 class LevelAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'level_winter', 'level_spring', 'level_summer', 'level_autumn')
+    list_display = ('pk', 'winter', 'spring', 'summer', 'autumn')
     list_display_links = ('pk',)
 
 
 class TouristAdmin(admin.ModelAdmin):
     list_display = ('tourist', 'pereval')
 
-admin.site.register(Users, UsersAdmin)
+admin.site.register(User, UserAdmin)
 admin.site.register(Added, AddedAdmin)
 admin.site.register(Tourist, TouristAdmin)
 admin.site.register(Coords, CoordsAdmin)
