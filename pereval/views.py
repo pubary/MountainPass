@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 
 from pereval.models import Added, Images
@@ -22,3 +23,5 @@ class PerevalDetail(DetailView):
 
 
 
+def redirect_to_api(request):
+    return redirect('api/v1/')
