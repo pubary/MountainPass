@@ -59,7 +59,7 @@ class Added(models.Model):
 class Images(models.Model):
     pereval = models.ForeignKey(Added, on_delete=models.CASCADE)
     title = models.CharField(max_length=64, )
-    foto = models.ImageField(upload_to='photo/%Y/%m/%d/', blank=True, )
+    data = models.ImageField(upload_to='photo/%Y/%m/%d/', blank=True, )
     added_date = models.DateTimeField(auto_now_add=True, )
 
 
