@@ -51,7 +51,7 @@ class SubmitDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Added
         fields = ('pk', 'beauty_title', 'title', 'other_titles',
-                  'connect',# 'add_time',
+                  'connect', 'add_time',
                   'user', 'coords', 'level')#, 'images')
 
     def create(self, validated_data):

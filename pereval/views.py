@@ -39,8 +39,8 @@ class PerevalViewSet(viewsets.ModelViewSet):
                 serializer.save()
                 pk = serializer.data['pk']
                 return Response({'status': 200, 'message': None, 'id': pk})
-            else:
-                return Response({'status': 400, 'message': ' Bad Request', 'id': None})
+            # else:
+            #     return Response({'status': 400, 'message': ' Bad Request', 'id': None})
         except:
             return Response({'status': 500, 'message': 'Ошибка подключения к базе данных', 'id': None})
 

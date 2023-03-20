@@ -33,6 +33,7 @@ class Added(models.Model):
     other_titles = models.CharField(max_length=128, )
     connect = models.CharField(max_length=128, blank=True)
     add_time = models.DateTimeField()
+    send_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=16, choices=STATUS, default='new',)
     coords = models.OneToOneField(Coords, blank=True, on_delete=models.SET_NULL, null=True)
     level = models.OneToOneField(Level, blank=True, on_delete=models.SET_NULL, null=True)
