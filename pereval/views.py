@@ -1,12 +1,13 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 
-from rest_framework import viewsets, status
+from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
+from rest_framework.exceptions import APIException
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
-from pereval.models import Added, Images
-from pereval.serializers import PerevalSerializer, SubmitDataSerializer
+from .serializers import *
 
 
 class PerevalList(ListView):
@@ -27,28 +28,42 @@ class PerevalDetail(DetailView):
         return context
 
 
+class CoordsViewSet(viewsets.ModelViewSet):
+    queryset = Coords.objects.all()
+    serializer_class = CoordsSerializer
+
+
+class LevelViewSet(viewsets.ModelViewSet):
+    queryset = Level.objects.all()
+    serializer_class = LevelSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
 class PerevalViewSet(viewsets.ModelViewSet):
     queryset = Added.objects.all()
     serializer_class = PerevalSerializer
 
     @action(methods=['post'], detail=False)
     def submitData(self, request):
-        try :
+        try:
             serializer = SubmitDataSerializer(data=request.data)
-            if serializer.is_valid():   #(raise_exception=True)
+            # parser_classes = (MultiPartParser, FormParser,)
+            if serializer.is_valid(raise_exception=True):   #(raise_exception=True)
                 serializer.save()
                 pk = serializer.data['pk']
                 return Response({'status': 200, 'message': None, 'id': pk})
-            # else:
-            #     return Response({'status': 400, 'message': ' Bad Request', 'id': None})
-        except:
-            return Response({'status': 500, 'message': 'Ошибка подключения к базе данных', 'id': None})
-
+        except APIException as exc:
+            if exc.status_code == 400:
+                return Response({'status': 400, 'message': ' Bad Request', 'id': None})
+            else:
+                return Response({'status': 500, 'message': 'Ошибка подключения к базе данных', 'id': None})
 
 
 
 def redirect_to_api(request):
     return redirect('api/v1/')
-
-
 

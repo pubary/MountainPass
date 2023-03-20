@@ -3,7 +3,7 @@ from django.db.models.functions import Lower
 
 
 class User(models.Model):
-    email = models.EmailField(primary_key=True, max_length=128, unique=True, null=False, blank=False)
+    email = models.EmailField(max_length=128, null=False, blank=False)
     fam = models.CharField('fam', max_length=128,)
     name = models.CharField('name', max_length=128,)
     otc = models.CharField('otc', max_length=128, blank=True)
@@ -37,6 +37,7 @@ class Added(models.Model):
     status = models.CharField(max_length=16, choices=STATUS, default='new',)
     coords = models.OneToOneField(Coords, blank=True, on_delete=models.SET_NULL, null=True)
     level = models.OneToOneField(Level, blank=True, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Images(models.Model):
@@ -44,10 +45,5 @@ class Images(models.Model):
     title = models.CharField(max_length=64, )
     data = models.ImageField(upload_to='photo/%Y/%m/%d/', blank=True, )
     added_date = models.DateTimeField(auto_now_add=True, )
-
-
-class Tourist(models.Model):
-    tourist = models.OneToOneField(User, on_delete=models.CASCADE)
-    pereval = models.ForeignKey(Added, on_delete=models.CASCADE)
 
 

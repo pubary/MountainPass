@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Added, Tourist, Coords, Level, Images
+from .models import User, Added, Coords, Level, Images
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -22,12 +22,9 @@ class LevelAdmin(admin.ModelAdmin):
     list_display_links = ('pk',)
 
 
-class TouristAdmin(admin.ModelAdmin):
-    list_display = ('tourist', 'pereval')
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Added, AddedAdmin)
-admin.site.register(Tourist, TouristAdmin)
 admin.site.register(Coords, CoordsAdmin)
 admin.site.register(Level, LevelAdmin)
 admin.site.register(Images)
