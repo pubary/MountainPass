@@ -32,10 +32,10 @@ class Added(models.Model):
     title = models.CharField(max_length=128, )
     other_titles = models.CharField(max_length=128, )
     connect = models.CharField(max_length=128, blank=True)
-    add_time = models.DateTimeField(auto_now_add=True, )
+    add_time = models.DateTimeField()
     status = models.CharField(max_length=16, choices=STATUS, default='new',)
-    coord_id = models.OneToOneField(Coords, blank=True, on_delete=models.SET_NULL, null=True)
-    level_id = models.OneToOneField(Level, blank=True, on_delete=models.SET_NULL, null=True)
+    coords = models.OneToOneField(Coords, blank=True, on_delete=models.SET_NULL, null=True)
+    level = models.OneToOneField(Level, blank=True, on_delete=models.SET_NULL, null=True)
 
 
 class Images(models.Model):
@@ -48,4 +48,5 @@ class Images(models.Model):
 class Tourist(models.Model):
     tourist = models.OneToOneField(User, on_delete=models.CASCADE)
     pereval = models.ForeignKey(Added, on_delete=models.CASCADE)
+
 

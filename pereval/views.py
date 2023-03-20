@@ -33,18 +33,22 @@ class PerevalViewSet(viewsets.ModelViewSet):
 
     @action(methods=['post'], detail=False)
     def submitData(self, request):
-        print(request.data['user'])
-        serializer = SubmitDataSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        # pereval = Added.objects.get(pk=pk)
-
+        try :
+            serializer = SubmitDataSerializer(data=request.data)
+            if serializer.is_valid():   #(raise_exception=True)
+                serializer.save()
+                pk = serializer.data['pk']
+                return Response({'status': 200, 'message': None, 'id': pk})
+            else:
+                return Response({'status': 400, 'message': ' Bad Request', 'id': None})
+        except:
+            return Response({'status': 500, 'message': 'Ошибка подключения к базе данных', 'id': None})
 
 
 
 
 def redirect_to_api(request):
     return redirect('api/v1/')
+
+
+

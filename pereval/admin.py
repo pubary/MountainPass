@@ -8,7 +8,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class AddedAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'title', 'coord_id', 'level_id', 'status', 'add_time')
+    list_display = ('pk', 'title', 'coords', 'level', 'status', 'add_time')
     list_display_links = ('title',)
 
 
