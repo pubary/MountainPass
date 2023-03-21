@@ -18,8 +18,10 @@
     <ul>{{ pereval.status }}</ul>
     {% if images %}
         {% for image in images %}
-            <ul><img src="{{image.data.url}}"></ul>
-            <ul>{{ image.title }}</ul>
+            {%if image.data%}
+                <ul><img src="{{image.data.url}}"></ul>
+                <ul>{{ image.title }}</ul>
+            {%endif%}
         {% endfor %}
     {% endif %}
 </body>

@@ -22,6 +22,7 @@ class LevelSerializer(serializers.ModelSerializer):
 
 
 class ImagesSerializer(serializers.ModelSerializer):
+    data = serializers.ImageField(default=None)
     class Meta:
         model = Images
         fields = ('title', 'data')
@@ -48,6 +49,7 @@ class PerevalSerializer(serializers.ModelSerializer):
 
 
 class SubmitDataSerializer(PerevalSerializer):
+    images = ImagesSerializer(many=True, required=False)
 
     def create(self, validated_data):
         coord_data = validated_data.pop('coords')

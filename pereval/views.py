@@ -54,19 +54,23 @@ class PerevalViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericVi
 
     @action(methods=['post'], detail=False)
     def submitData(self, request):
-        try:
-            serializer = SubmitDataSerializer(data=request.data)
-            # parser_classes = (MultiPartParser, FormParser,)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
-                pk = serializer.data['pk']
-                return Response({'status': 200, 'message': None, 'id': pk})
-        except APIException as exc:
-            if exc.status_code == 400:
-                return Response({'status': exc.status_code, 'message': ' Bad Request', 'id': None})
-            else:
-                return Response({'status': exc.status_code, 'message': 'Ошибка подключения к базе данных', 'id': None})
-
+        # try:
+        #     serializer = SubmitDataSerializer(data=request.data)
+        #     # parser_classes = (MultiPartParser, FormParser,)
+        #     if serializer.is_valid(raise_exception=True):
+        #         serializer.save()
+        #         pk = serializer.data['pk']
+        #         return Response({'status': 200, 'message': None, 'id': pk})
+        # except APIException as exc:
+        #     if exc.status_code == 400:
+        #         return Response({'status': exc.status_code, 'message': ' Bad Request', 'id': None})
+        #     else:
+        #         return Response({'status': exc.status_code, 'message': 'Ошибка подключения к базе данных', 'id': None})
+        serializer = SubmitDataSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            pk = serializer.data['pk']
+            return Response({'status': 200, 'message': None, 'id': pk})
 
 
 def redirect_to_api(request):

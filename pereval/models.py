@@ -3,6 +3,7 @@ from django.db.models.functions import Lower
 
 
 class User(models.Model):
+    # email = models.EmailField(primary_key=True, unique=True, max_length=128, null=False, blank=False)
     email = models.EmailField(max_length=128, null=False, blank=False)
     fam = models.CharField('fam', max_length=128,)
     name = models.CharField('name', max_length=128,)
@@ -43,7 +44,6 @@ class Added(models.Model):
 class Images(models.Model):
     pereval = models.ForeignKey(Added, related_name='images', on_delete=models.CASCADE)
     title = models.CharField(max_length=64, )
-    data = models.ImageField(upload_to='photo/%Y/%m/%d/', blank=True, )
+    data = models.ImageField(upload_to='photo/%Y/%m/%d/', blank=True)
     added_date = models.DateTimeField(auto_now_add=True, )
-
 
