@@ -24,7 +24,13 @@ class LevelSerializer(serializers.ModelSerializer):
 class ImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Images
-        fields = ('pereval', 'title', 'data')
+        fields = ('title', 'data')
+
+
+class ImagesViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Images
+        fields = ('pk', 'pereval', 'title', 'data', 'added_date')
 
 
 class PerevalSerializer(serializers.ModelSerializer):
@@ -32,7 +38,7 @@ class PerevalSerializer(serializers.ModelSerializer):
     level = LevelSerializer()
     user = UserSerializer(required=False)
     pk = serializers.IntegerField(required=False, read_only=True)
-    images = ImagesSerializer(many=True, required=False)
+    images = ImagesViewSerializer(many=True, required=False)
 
     class Meta:
         model = Added
@@ -51,9 +57,13 @@ class SubmitDataSerializer(PerevalSerializer):
         user_data = validated_data.pop('user')
         user = User.objects.get_or_create(**user_data)
         tourist = User.objects.get(**user_data)
-        images_data = validated_data.pop('images')
+        images_data = None
+        if 'images' in self.initial_data:
+            images_data = validated_data.pop('images')
         pereval = Added.objects.create(coords=coords, level=level, user=tourist, **validated_data)
-        for data in images_data:
-            Images.objects.create(pereval=pereval, **data)
+        if images_data:
+            for data in images_data:
+                Images.objects.create(pereval=pereval, **data)
         return pereval
+
 

@@ -45,7 +45,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class ImagesViewSet(viewsets.ModelViewSet):
     queryset = Images.objects.all()
-    serializer_class = ImagesSerializer
+    serializer_class = ImagesViewSerializer
 
 
 class PerevalViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
@@ -63,9 +63,9 @@ class PerevalViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericVi
                 return Response({'status': 200, 'message': None, 'id': pk})
         except APIException as exc:
             if exc.status_code == 400:
-                return Response({'status': 400, 'message': ' Bad Request', 'id': None})
+                return Response({'status': exc.status_code, 'message': ' Bad Request', 'id': None})
             else:
-                return Response({'status': 500, 'message': 'Ошибка подключения к базе данных', 'id': None})
+                return Response({'status': exc.status_code, 'message': 'Ошибка подключения к базе данных', 'id': None})
 
 
 
