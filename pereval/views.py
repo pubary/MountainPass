@@ -43,7 +43,12 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
-class PerevalViewSet(viewsets.ModelViewSet):
+class ImagesViewSet(viewsets.ModelViewSet):
+    queryset = Images.objects.all()
+    serializer_class = ImagesSerializer
+
+
+class PerevalViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
     queryset = Added.objects.all()
     serializer_class = PerevalSerializer
 
@@ -52,7 +57,7 @@ class PerevalViewSet(viewsets.ModelViewSet):
         try:
             serializer = SubmitDataSerializer(data=request.data)
             # parser_classes = (MultiPartParser, FormParser,)
-            if serializer.is_valid(raise_exception=True):   #(raise_exception=True)
+            if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 pk = serializer.data['pk']
                 return Response({'status': 200, 'message': None, 'id': pk})
@@ -65,5 +70,5 @@ class PerevalViewSet(viewsets.ModelViewSet):
 
 
 def redirect_to_api(request):
-    return redirect('api/v1/')
+    return redirect('pereval/')
 

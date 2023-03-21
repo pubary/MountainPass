@@ -4,13 +4,14 @@ from django.urls import path, include
 from rest_framework import routers
 
 from mtpass.settings import DEBUG, MEDIA_ROOT, MEDIA_URL
-from pereval.views import PerevalViewSet, redirect_to_api, CoordsViewSet, LevelViewSet, UserViewSet
+from pereval.views import PerevalViewSet, redirect_to_api, CoordsViewSet, LevelViewSet, UserViewSet, ImagesViewSet
 
 router = routers.DefaultRouter()
 router.register(r'pereval', PerevalViewSet)
 router.register(r'coords', CoordsViewSet)
 router.register(r'level', LevelViewSet)
 router.register(r'user', UserViewSet)
+router.register(r'images', ImagesViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
