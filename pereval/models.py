@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.functions import Lower
 
 
-class User(models.Model):
+class Users(models.Model):
     # email = models.EmailField(primary_key=True, unique=True, max_length=128, null=False, blank=False)
     email = models.EmailField(max_length=128, null=False, blank=False)
     fam = models.CharField('fam', max_length=128,)
@@ -38,7 +38,7 @@ class Added(models.Model):
     status = models.CharField(max_length=16, choices=STATUS, default='new',)
     coords = models.OneToOneField(Coords, blank=True, on_delete=models.SET_NULL, null=True)
     level = models.OneToOneField(Level, blank=True, on_delete=models.SET_NULL, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Users, on_delete=models.CASCADE)
 
 
 class Images(models.Model):

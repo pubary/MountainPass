@@ -5,7 +5,7 @@ from .models import *
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = Users
         fields = ('email', 'fam', 'name', 'otc', 'phone')
 
 
@@ -29,27 +29,24 @@ class ImagesSerializer(serializers.ModelSerializer):
 
 
 class ImagesViewSerializer(serializers.ModelSerializer):
+    pk = serializers.IntegerField(required=False)
+    data = serializers.ImageField(required=False)
+    pereval = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Images
         fields = ('pk', 'pereval', 'title', 'data', 'added_date')
 
 
-class PerevalSerializer(serializers.ModelSerializer):
+class SubmitDataSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
     coords = CoordsSerializer()
     level = LevelSerializer()
-    user = UserSerializer(required=False)
-    pk = serializers.IntegerField(required=False, read_only=True)
     images = ImagesViewSerializer(many=True, required=False)
 
     class Meta:
         model = Added
-        fields = ('pk', 'beauty_title', 'title', 'other_titles',
-                  'connect', 'add_time',
-                  'user', 'coords', 'level', 'images')
-
-
-class SubmitDataSerializer(PerevalSerializer):
-    images = ImagesSerializer(many=True, required=False)
+        fields = ('__all__')
+        depth = 1
 
     def create(self, validated_data):
         coord_data = validated_data.pop('coords')
@@ -57,8 +54,8 @@ class SubmitDataSerializer(PerevalSerializer):
         level_data = validated_data.pop('level')
         level = Level.objects.create(**level_data)
         user_data = validated_data.pop('user')
-        user = User.objects.get_or_create(**user_data)
-        tourist = User.objects.get(**user_data)
+        user = Users.objects.get_or_create(**user_data)
+        tourist = Users.objects.get(**user_data)
         images_data = None
         if 'images' in self.initial_data:
             images_data = validated_data.pop('images')
@@ -67,5 +64,7 @@ class SubmitDataSerializer(PerevalSerializer):
             for data in images_data:
                 Images.objects.create(pereval=pereval, **data)
         return pereval
+
+
 
 

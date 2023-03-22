@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import User, Added, Coords, Level, Images
+from .models import Users, Added, Coords, Level, Images
 
 
-class UserAdmin(admin.ModelAdmin):
+class UsersAdmin(admin.ModelAdmin):
     list_display = ['email', 'fam', 'name', 'otc']
     list_display_links = ('email', 'fam',)
 
@@ -23,7 +23,7 @@ class LevelAdmin(admin.ModelAdmin):
 
 
 
-admin.site.register(User, UserAdmin)
+admin.site.register(Users, UsersAdmin)
 admin.site.register(Added, AddedAdmin)
 admin.site.register(Coords, CoordsAdmin)
 admin.site.register(Level, LevelAdmin)
