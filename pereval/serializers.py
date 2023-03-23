@@ -22,13 +22,6 @@ class LevelSerializer(serializers.ModelSerializer):
         fields = ('winter', 'spring', 'summer', 'autumn')
 
 
-class ImagesSerializer(serializers.ModelSerializer):
-    data = serializers.ImageField(default=None)
-    class Meta:
-        model = Images
-        fields = ('title', 'data')
-
-
 class ImagesViewSerializer(serializers.ModelSerializer):
     pk = serializers.IntegerField(required=False)
     data = serializers.ImageField(required=False)
@@ -91,4 +84,6 @@ class SubmitDataSerializer(serializers.ModelSerializer):
         instance.add_time = validated_data.get('add_time', instance.add_time)
         instance.save()
         return instance
+
+
 

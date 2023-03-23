@@ -28,17 +28,17 @@ class PerevalDetail(DetailView):
         return context
 
 
-class CoordsViewSet(viewsets.ModelViewSet):
+class CoordsViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
     queryset = Coords.objects.all()
     serializer_class = CoordsSerializer
 
 
-class LevelViewSet(viewsets.ModelViewSet):
+class LevelViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
     queryset = Level.objects.all()
     serializer_class = LevelSerializer
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
     queryset = Users.objects.all()
     serializer_class = UserSerializer
 
