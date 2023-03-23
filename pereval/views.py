@@ -3,7 +3,6 @@ from django.views.generic import ListView, DetailView
 
 from rest_framework import viewsets, mixins, views
 from rest_framework.exceptions import APIException
-from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -55,8 +54,9 @@ class PerevalViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericVi
 
 
 class SubmitDataView(views.APIView):
-    def get(self, request, pk=None):
+    def get(self, request, *args, **kwargs):
         query = dict(self.request.GET.items())
+        pk = kwargs.get('pk', None)
         if not pk:
             object = Added.objects.filter(**query)
             serializer = SubmitDataSerializer(object, many=True)
@@ -78,6 +78,26 @@ class SubmitDataView(views.APIView):
                 return Response({'status': exc.status_code, 'message': ' Bad Request', 'id': None})
             else:
                 return Response({'status': exc.status_code, 'message': 'Ошибка подключения к базе данных', 'id': None})
+
+    def patch(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        if not pk:
+            return Response({'state': 0, 'message': 'Not id in Request'})
+        try:
+            instance = Added.objects.get(pk=pk)
+        except:
+            return Response({'state': 0, 'message': 'Object does not exists'})
+        if instance.status == 'new':
+            serializer = SubmitDataSerializer(data=request.data, instance=instance)
+            parser_classes = (MultiPartParser, FormParser,)
+            try:
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+                    return Response({'state': 0, 'message': 'Successfully'})
+            except APIException as exc:
+                return Response({'state': 0, 'message': f'Error {exc.status_code}'})
+        else:
+            return Response({'state': 0, 'message': 'Forbidden to edit'})
 
 
 def redirect_to_api(request):

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
 
 from .models import *
 
@@ -46,25 +47,48 @@ class SubmitDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Added
         fields = ('__all__')
-        depth = 1
 
     def create(self, validated_data):
         coord_data = validated_data.pop('coords')
-        coords = Coords.objects.create(**coord_data)
         level_data = validated_data.pop('level')
-        level = Level.objects.create(**level_data)
         user_data = validated_data.pop('user')
-        user = Users.objects.get_or_create(**user_data)
-        tourist = Users.objects.get(**user_data)
         images_data = None
         if 'images' in self.initial_data:
             images_data = validated_data.pop('images')
+        coords = Coords.objects.create(**coord_data)
+        level = Level.objects.create(**level_data)
+        user = Users.objects.get_or_create(**user_data)
+        tourist = get_object_or_404(queryset=Users.objects.all(), email=user_data['email'])
         pereval = Added.objects.create(coords=coords, level=level, user=tourist, **validated_data)
         if images_data:
-            for data in images_data:
-                Images.objects.create(pereval=pereval, **data)
+            for image_data in images_data:
+                Images.objects.create(pereval=pereval, **image_data)
         return pereval
 
+    def update(self, instance, validated_data):
+        coord_data = validated_data.pop('coords')
+        level_data = validated_data.pop('level')
+        if instance.coords:
+            coords = instance.coords
+            for (key, value) in coord_data.items():
+                setattr(coords, key, value)
+                coords.save()
+        else:
+            Coords.objects.create(**coord_data)
+        if instance.level:
+            level = instance.level
+            for (key, value) in level_data.items():
+                setattr(level, key, value)
+                level.save()
+        else:
+            Level.objects.create(**level_data)
+        instance.beauty_title = validated_data.get('beauty_title', instance.beauty_title)
+        instance.title = validated_data.get('title', instance.title)
+        instance.other_titles = validated_data.get('other_titles', instance.other_titles)
+        instance.connect = validated_data.get('connect', instance.connect)
+        instance.add_time = validated_data.get('add_time', instance.add_time)
+        instance.save()
+        return instance
 
 
 
