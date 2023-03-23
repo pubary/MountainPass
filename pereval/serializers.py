@@ -40,7 +40,7 @@ class ImagesViewSerializer(serializers.ModelSerializer):
 
 class SubmitDataSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-    coords = CoordsSerializer()
+    coords = CoordsSerializer(required=False)
     level = LevelSerializer()
     images = ImagesViewSerializer(many=True, required=False)
 
@@ -66,22 +66,24 @@ class SubmitDataSerializer(serializers.ModelSerializer):
         return pereval
 
     def update(self, instance, validated_data):
-        coord_data = validated_data.pop('coords')
-        level_data = validated_data.pop('level')
-        if instance.coords:
-            coords = instance.coords
-            for (key, value) in coord_data.items():
-                setattr(coords, key, value)
-                coords.save()
-        else:
-            Coords.objects.create(**coord_data)
-        if instance.level:
-            level = instance.level
-            for (key, value) in level_data.items():
-                setattr(level, key, value)
-                level.save()
-        else:
-            Level.objects.create(**level_data)
+        if 'coords' in self.initial_data:
+            coord_data = validated_data.pop('coords')
+            if instance.coords:
+                coords = instance.coords
+                for (key, value) in coord_data.items():
+                    setattr(coords, key, value)
+                    coords.save()
+            else:
+                Coords.objects.create(**coord_data)
+        if 'level' in self.initial_data:
+            level_data = validated_data.pop('level')
+            if instance.level:
+                level = instance.level
+                for (key, value) in level_data.items():
+                    setattr(level, key, value)
+                    level.save()
+            else:
+                Level.objects.create(**level_data)
         instance.beauty_title = validated_data.get('beauty_title', instance.beauty_title)
         instance.title = validated_data.get('title', instance.title)
         instance.other_titles = validated_data.get('other_titles', instance.other_titles)
@@ -89,6 +91,4 @@ class SubmitDataSerializer(serializers.ModelSerializer):
         instance.add_time = validated_data.get('add_time', instance.add_time)
         instance.save()
         return instance
-
-
 

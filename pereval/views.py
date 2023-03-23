@@ -75,7 +75,7 @@ class SubmitDataView(views.APIView):
                 return Response({'status': 200, 'message': None, 'id': pk})
         except APIException as exc:
             if exc.status_code == 400:
-                return Response({'status': exc.status_code, 'message': ' Bad Request', 'id': None})
+                return Response({'status': exc.status_code, 'message': 'Bad Request', 'id': None})
             else:
                 return Response({'status': exc.status_code, 'message': 'Ошибка подключения к базе данных', 'id': None})
 
@@ -93,9 +93,9 @@ class SubmitDataView(views.APIView):
             try:
                 if serializer.is_valid(raise_exception=True):
                     serializer.save()
-                    return Response({'state': 0, 'message': 'Successfully'})
+                    return Response({'state': 1, 'message': 'Successfully'})
             except APIException as exc:
-                return Response({'state': 0, 'message': f'Error {exc.status_code}'})
+                return Response({'state': 0, 'message': f'Error {exc.detail}'})
         else:
             return Response({'state': 0, 'message': 'Forbidden to edit'})
 
