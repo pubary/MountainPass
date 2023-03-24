@@ -23,7 +23,7 @@ class LevelSerializer(serializers.ModelSerializer):
 
 
 class ImagesSerializer(serializers.ModelSerializer):
-    pk = serializers.IntegerField(required=False)
+    pk = serializers.IntegerField(read_only=True)
     data = serializers.ImageField(required=False)
     pereval = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
@@ -36,6 +36,7 @@ class AddedSerializer(serializers.ModelSerializer):
     coords = CoordsSerializer(required=False)
     level = LevelSerializer()
     images = ImagesSerializer(many=True, required=False)
+    status = serializers.ReadOnlyField()
 
     class Meta:
         model = Added
@@ -84,6 +85,5 @@ class AddedSerializer(serializers.ModelSerializer):
         instance.add_time = validated_data.get('add_time', instance.add_time)
         instance.save()
         return instance
-
 
 

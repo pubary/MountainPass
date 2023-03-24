@@ -30,66 +30,27 @@ class PerevalDetail(DetailView):
         context['images'] = images
         return context
 
-
-# class CoordsViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
-#     queryset = Coords.objects.all()
-#     serializer_class = CoordsSerializer
-#
-#
-# class LevelViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
-#     queryset = Level.objects.all()
-#     serializer_class = LevelSerializer
-#
-#
-# class UserViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
-#     queryset = Users.objects.all()
-#     serializer_class = UserSerializer
-#
-#
-# class ImagesViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
-#     queryset = Images.objects.all()
-#     serializer_class = ImagesSerializer
-
-
-# class PerevalViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
-#     queryset = Added.objects.all()
-#     serializer_class = AddedSerializer
+# Remove to any file
 GET_EMAIL_RESP = 'sfwef'
 GET_EMAIL_DISCR = 'efwegregrefq'
-# @method_decorator(name='get', decorator=swagger_auto_schema(
-#     manual_parameters=[
-#         openapi.Parameter(
-#             'user__email', openapi.IN_QUERY,
-#             description=GET_EMAIL_DISCR,
-#             type=openapi.FORMAT_EMAIL,
-#             required=False
-#         ),
-#     ],
-#     responses={'200': GET_EMAIL_RESP, }
-# ))
+GET_ID_DISCR = 'wewffwfdwf'
+
+
 class AddedView(views.APIView):
     @swagger_auto_schema(
-            manual_parameters=[
-            openapi.Parameter(
-                'user__email', openapi.IN_QUERY,
-                description=GET_EMAIL_DISCR,
-                type=openapi.FORMAT_EMAIL,
-                required=False
-                ),
-            ],
-            responses={'200': GET_EMAIL_RESP, }
-            )
-    def get(self, request, *args, **kwargs):
+        manual_parameters=[openapi.Parameter('user__email',
+                                openapi.IN_QUERY, description=GET_EMAIL_DISCR,
+                                required=False, type=openapi.FORMAT_EMAIL),],
+        responses={'200': AddedSerializer, }, )
+    def get(self, request, **kwargs):
         query = dict(self.request.GET.items())
-        pk = kwargs.get('pk', None)
-        if not pk:
-            object = Added.objects.filter(**query)
-            serializer = AddedSerializer(object, many=True)
-        else:
-            object = get_object_or_404(queryset=Added.objects.all(), pk=pk)
-            serializer = AddedSerializer(object)
+        object = Added.objects.filter(**query)
+        serializer = AddedSerializer(object, many=True)
         return Response(serializer.data)
 
+    @swagger_auto_schema(
+                        responses={'200': GET_EMAIL_RESP, },
+                        request_body=AddedSerializer, )
     def post(self, request):
         try:
             serializer = AddedSerializer(data=request.data)
@@ -103,6 +64,15 @@ class AddedView(views.APIView):
                 return Response({'status': exc.status_code, 'message': 'Bad Request', 'id': None})
             else:
                 return Response({'status': exc.status_code, 'message': 'Ошибка подключения к базе данных', 'id': None})
+
+
+class AddedDetailView(views.APIView):
+    @swagger_auto_schema(responses={'200': AddedSerializer, }, )
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        object = get_object_or_404(queryset=Added.objects.all(), pk=pk)
+        serializer = AddedSerializer(object)
+        return Response(serializer.data)
 
     def patch(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
