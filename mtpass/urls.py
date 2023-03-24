@@ -22,11 +22,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', redirect_to_api),
     path('pereval/', include('pereval.urls')),
-    # path('api/v1/', include(router.urls)),
     path('api/v1/submitdata/', AddedView.as_view(), name='submitdata'),
     path('api/v1/submitdata/<int:pk>/', AddedDetailView.as_view()),
     path('api/v1/swagger/schema/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger'),
 ]
+
 
 if DEBUG:
     urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

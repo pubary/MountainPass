@@ -33,9 +33,9 @@ class ImagesSerializer(serializers.ModelSerializer):
 
 class AddedSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-    coords = CoordsSerializer(required=False)
+    coords = CoordsSerializer()
     level = LevelSerializer()
-    images = ImagesSerializer(many=True, required=False)
+    images = ImagesSerializer(many=True)
     status = serializers.ReadOnlyField()
 
     class Meta:

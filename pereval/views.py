@@ -1,16 +1,25 @@
 from django.shortcuts import redirect
-from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from rest_framework import viewsets, mixins, views
+from rest_framework import views
 from rest_framework.exceptions import APIException
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
 
 from .serializers import *
+
+
+PATCH_RESPONSES = {'200': '{"state": 1, "message": "Successfully"}',
+                  'other exc.': '{"state": 1, "message": "Error {exc.detail}"}',
+                  'when obj.status not "new"': '{"state": 0, "message": "Forbidden to edit"}'}
+
+POST_RESPONSES = {'200': '{"status": 200, "message": null, "id": id }',
+                  '400': '{ "status": 400, "message": "Bad Request", "id": None}',
+                  '500': '{ "status": 500, "message": "Ошибка подключения к базе данных","id": null}}'}
+
+GET_EMAIL_DISCR = f"You can enter user's email to display his sending"
 
 
 class PerevalList(ListView):
@@ -30,11 +39,6 @@ class PerevalDetail(DetailView):
         context['images'] = images
         return context
 
-# Remove to any file
-GET_EMAIL_RESP = 'sfwef'
-GET_EMAIL_DISCR = 'efwegregrefq'
-GET_ID_DISCR = 'wewffwfdwf'
-
 
 class AddedView(views.APIView):
     @swagger_auto_schema(
@@ -48,9 +52,7 @@ class AddedView(views.APIView):
         serializer = AddedSerializer(object, many=True)
         return Response(serializer.data)
 
-    @swagger_auto_schema(
-                        responses={'200': GET_EMAIL_RESP, },
-                        request_body=AddedSerializer, )
+    @swagger_auto_schema(responses=POST_RESPONSES, request_body=AddedSerializer, )
     def post(self, request):
         try:
             serializer = AddedSerializer(data=request.data)
@@ -74,6 +76,7 @@ class AddedDetailView(views.APIView):
         serializer = AddedSerializer(object)
         return Response(serializer.data)
 
+    @swagger_auto_schema(responses=PATCH_RESPONSES, request_body=AddedSerializer, )
     def patch(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         if not pk:
@@ -95,5 +98,7 @@ class AddedDetailView(views.APIView):
             return Response({'state': 0, 'message': 'Forbidden to edit'})
 
 
+
 def redirect_to_api(request):
     return redirect('pereval/')
+
