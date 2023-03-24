@@ -22,7 +22,7 @@ class LevelSerializer(serializers.ModelSerializer):
         fields = ('winter', 'spring', 'summer', 'autumn')
 
 
-class ImagesViewSerializer(serializers.ModelSerializer):
+class ImagesSerializer(serializers.ModelSerializer):
     pk = serializers.IntegerField(required=False)
     data = serializers.ImageField(required=False)
     pereval = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -31,11 +31,11 @@ class ImagesViewSerializer(serializers.ModelSerializer):
         fields = ('pk', 'pereval', 'title', 'data', 'added_date')
 
 
-class SubmitDataSerializer(serializers.ModelSerializer):
+class AddedSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     coords = CoordsSerializer(required=False)
     level = LevelSerializer()
-    images = ImagesViewSerializer(many=True, required=False)
+    images = ImagesSerializer(many=True, required=False)
 
     class Meta:
         model = Added

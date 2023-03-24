@@ -1,5 +1,8 @@
 from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework import viewsets, mixins, views
 from rest_framework.exceptions import APIException
@@ -28,46 +31,68 @@ class PerevalDetail(DetailView):
         return context
 
 
-class CoordsViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
-    queryset = Coords.objects.all()
-    serializer_class = CoordsSerializer
+# class CoordsViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
+#     queryset = Coords.objects.all()
+#     serializer_class = CoordsSerializer
+#
+#
+# class LevelViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
+#     queryset = Level.objects.all()
+#     serializer_class = LevelSerializer
+#
+#
+# class UserViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
+#     queryset = Users.objects.all()
+#     serializer_class = UserSerializer
+#
+#
+# class ImagesViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
+#     queryset = Images.objects.all()
+#     serializer_class = ImagesSerializer
 
 
-class LevelViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
-    queryset = Level.objects.all()
-    serializer_class = LevelSerializer
-
-
-class UserViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
-    queryset = Users.objects.all()
-    serializer_class = UserSerializer
-
-
-class ImagesViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
-    queryset = Images.objects.all()
-    serializer_class = ImagesViewSerializer
-
-
-class PerevalViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
-    queryset = Added.objects.all()
-    serializer_class = SubmitDataSerializer
-
-
-class SubmitDataView(views.APIView):
+# class PerevalViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
+#     queryset = Added.objects.all()
+#     serializer_class = AddedSerializer
+GET_EMAIL_RESP = 'sfwef'
+GET_EMAIL_DISCR = 'efwegregrefq'
+# @method_decorator(name='get', decorator=swagger_auto_schema(
+#     manual_parameters=[
+#         openapi.Parameter(
+#             'user__email', openapi.IN_QUERY,
+#             description=GET_EMAIL_DISCR,
+#             type=openapi.FORMAT_EMAIL,
+#             required=False
+#         ),
+#     ],
+#     responses={'200': GET_EMAIL_RESP, }
+# ))
+class AddedView(views.APIView):
+    @swagger_auto_schema(
+            manual_parameters=[
+            openapi.Parameter(
+                'user__email', openapi.IN_QUERY,
+                description=GET_EMAIL_DISCR,
+                type=openapi.FORMAT_EMAIL,
+                required=False
+                ),
+            ],
+            responses={'200': GET_EMAIL_RESP, }
+            )
     def get(self, request, *args, **kwargs):
         query = dict(self.request.GET.items())
         pk = kwargs.get('pk', None)
         if not pk:
             object = Added.objects.filter(**query)
-            serializer = SubmitDataSerializer(object, many=True)
+            serializer = AddedSerializer(object, many=True)
         else:
             object = get_object_or_404(queryset=Added.objects.all(), pk=pk)
-            serializer = SubmitDataSerializer(object)
+            serializer = AddedSerializer(object)
         return Response(serializer.data)
 
     def post(self, request):
         try:
-            serializer = SubmitDataSerializer(data=request.data)
+            serializer = AddedSerializer(data=request.data)
             parser_classes = (MultiPartParser, FormParser,)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
@@ -88,7 +113,7 @@ class SubmitDataView(views.APIView):
         except:
             return Response({'state': 0, 'message': 'Object does not exists'})
         if instance.status == 'new':
-            serializer = SubmitDataSerializer(data=request.data, instance=instance)
+            serializer = AddedSerializer(data=request.data, instance=instance)
             parser_classes = (MultiPartParser, FormParser,)
             try:
                 if serializer.is_valid(raise_exception=True):
