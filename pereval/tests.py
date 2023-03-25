@@ -1,6 +1,3 @@
-import datetime
-
-import pytz
 from django.urls import reverse
 
 from rest_framework import status
@@ -18,6 +15,8 @@ class SubmitDataTest(APITestCase):
         self.user = Users.objects.create(email='123@45.6', fam='qaz', name='wer', otc='red')
         self.add = Added.objects.create(coords=self.coords, level=self.level, user=self.user, beauty_title='fine',
                                         title='good', other_titles='nice', add_time='2021-12-21 12:21:12', connect="")
+        self.serializer_data = AddedSerializer(self.add).data
+
     def test_post(self):
         data = DATA
         url = reverse('submitdata')
@@ -45,15 +44,14 @@ class SubmitDataTest(APITestCase):
     def test_get_data(self):
         url = reverse('submitdata')
         response = self.client.get(url)
-        serializer_data = AddedSerializer(self.add).data
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0].get('id'), serializer_data.get('id'))
-        self.assertEqual(response.data[0].get('title'), serializer_data.get('title'))
+        self.assertEqual(response.data[0].get('id'), self.serializer_data.get('id'))
+        self.assertEqual(response.data[0].get('title'), self.serializer_data.get('title'))
+
+    def test_get_detail(self):
+        url = reverse('submitdetail', kwargs={'pk': self.add.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.serializer_data.pop('send_time'), response.data.pop('send_time'))
 
 
-
-    # def test_get_detail(self):
-    #     url = reverse('submitdetail', kwargs={'pk': 1})
-    #     print(33333333, url)
-    #     response = self.client.get(url)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
