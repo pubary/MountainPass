@@ -11,9 +11,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CoordsSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+
     class Meta:
         model = Coords
-        fields = ('latitude', 'longitude', 'height')
+        fields = ('id', 'latitude', 'longitude', 'height')
 
 
 class LevelSerializer(serializers.ModelSerializer):
@@ -32,6 +34,7 @@ class ImagesSerializer(serializers.ModelSerializer):
 
 
 class AddedSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
     user = UserSerializer()
     coords = CoordsSerializer()
     level = LevelSerializer()
@@ -43,8 +46,8 @@ class AddedSerializer(serializers.ModelSerializer):
         fields = ('__all__')
 
     def create(self, validated_data):
-        coord_data = validated_data.pop('coords')
-        level_data = validated_data.pop('level')
+        coord_data = validated_data.pop('coords', None)
+        level_data = validated_data.pop('level', None)
         user_data = validated_data.pop('user')
         images_data = None
         if 'images' in self.initial_data:

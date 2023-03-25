@@ -23,7 +23,7 @@ urlpatterns = [
     path('', redirect_to_api),
     path('pereval/', include('pereval.urls')),
     path('api/v1/submitdata/', AddedView.as_view(), name='submitdata'),
-    path('api/v1/submitdata/<int:pk>/', AddedDetailView.as_view()),
+    path('api/v1/submitdata/<int:pk>/', AddedDetailView.as_view(), name='submitdetail'),
     path('api/v1/swagger/schema/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger'),
 ]
 
