@@ -54,4 +54,12 @@ class SubmitDataTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(self.serializer_data.pop('send_time'), response.data.pop('send_time'))
 
+    def test_get_email(self):
+        url = reverse('submitdata') + f'?user__email={self.add.user.email}'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0].get('id'), self.serializer_data.get('id'))
+        self.assertEqual(response.data[0].get('title'), self.serializer_data.get('title'))
 
+    def test_patch(self):
+        ...
