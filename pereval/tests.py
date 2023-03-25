@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 
 from pereval.models import Added, Coords, Level, Users
 from pereval.serializers import AddedSerializer
-from pereval.test_json import DATA
+from pereval.test_json import DATA as data
 
 
 class SubmitDataTest(APITestCase):
@@ -18,7 +18,6 @@ class SubmitDataTest(APITestCase):
         self.serializer_data = AddedSerializer(self.add).data
 
     def test_post(self):
-        data = DATA
         url = reverse('submitdata')
         response = self.client.post(url, data, format='json')
         add = Added.objects.get(title=data['title'])
@@ -62,4 +61,24 @@ class SubmitDataTest(APITestCase):
         self.assertEqual(response.data[0].get('title'), self.serializer_data.get('title'))
 
     def test_patch(self):
-        ...
+        url = reverse('submitdetail', kwargs={'pk': self.add.id})
+        print(url)
+        response = self.client.patch(url, data, format='json')
+        add = Added.objects.get(title=data['title'])
+        self.assertEqual(response.data, {'state': 1, 'message': 'Successfully'})
+        self.assertEqual(add.beauty_title, data['beauty_title'])
+        self.assertEqual(add.other_titles, data['other_titles'])
+
+    def test_invalid_patch(self):
+        pk = self.add.id + 1
+        url = reverse('submitdetail', kwargs={'pk': pk})
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.data, {'state': 0, 'message': 'Object does not exists'})
+
+    def test_forbidden_patch(self):
+        self.add.status = 'pending'
+        self.add.save()
+        url = reverse('submitdetail', kwargs={'pk': self.add.id})
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.data, {'state': 0, 'message': 'Forbidden to edit'})
+
