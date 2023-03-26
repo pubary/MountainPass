@@ -48,9 +48,12 @@ class AddedView(views.APIView):
         responses={'200': AddedSerializer, }, )
     def get(self, request, **kwargs):
         query = dict(self.request.GET.items())
-        object = Added.objects.filter(**query)
-        serializer = AddedSerializer(object, many=True)
-        return Response(serializer.data)
+        if query.get('user__email', None):
+            object = Added.objects.filter(**query)
+            serializer = AddedSerializer(object, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'status': 400, 'message': 'Not <email> in Request'})
 
     @swagger_auto_schema(responses=POST_RESPONSES, request_body=AddedSerializer, )
     def post(self, request):
@@ -80,7 +83,7 @@ class AddedDetailView(views.APIView):
     def patch(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         if not pk:
-            return Response({'state': 0, 'message': 'Not id in Request'})
+            return Response({'state': 0, 'message': 'Not <id> in Request'})
         try:
             instance = Added.objects.get(pk=pk)
         except:
@@ -99,6 +102,8 @@ class AddedDetailView(views.APIView):
 
 
 
+
 def redirect_to_api(request):
     return redirect('pereval/')
+
 

@@ -40,13 +40,12 @@ class SubmitDataTest(APITestCase):
         self.assertEqual(add.level.spring, data['level']['spring'])
         self.assertEqual(response.data, {'status': 200, 'message': None, 'id': add.id})
 
-    def test_get_data(self):
+    def test_invalid_get(self):
         url = reverse('submitdata')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0].get('id'), self.serializer_data.get('id'))
-        self.assertEqual(response.data[0].get('title'), self.serializer_data.get('title'))
-
+        self.assertEqual(response.data, {'status': 400, 'message': 'Not <email> in Request'})
+    #
     def test_get_detail(self):
         url = reverse('submitdetail', kwargs={'pk': self.add.id})
         response = self.client.get(url)
@@ -54,15 +53,14 @@ class SubmitDataTest(APITestCase):
         self.assertEqual(self.serializer_data.pop('send_time'), response.data.pop('send_time'))
 
     def test_get_email(self):
-        url = reverse('submitdata') + f'?user__email={self.add.user.email}'
-        response = self.client.get(url)
+        url = reverse('submitdata')
+        response = self.client.get(url + f'?user__email={self.add.user.email}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0].get('id'), self.serializer_data.get('id'))
         self.assertEqual(response.data[0].get('title'), self.serializer_data.get('title'))
 
     def test_patch(self):
         url = reverse('submitdetail', kwargs={'pk': self.add.id})
-        print(url)
         response = self.client.patch(url, data, format='json')
         add = Added.objects.get(title=data['title'])
         self.assertEqual(response.data, {'state': 1, 'message': 'Successfully'})
@@ -81,4 +79,6 @@ class SubmitDataTest(APITestCase):
         url = reverse('submitdetail', kwargs={'pk': self.add.id})
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.data, {'state': 0, 'message': 'Forbidden to edit'})
+
+
 
