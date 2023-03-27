@@ -19,7 +19,7 @@ POST_RESPONSES = {'200': '{"status": 200, "message": null, "id": id }',
                   '400': '{ "status": 400, "message": "Bad Request", "id": None}',
                   '500': '{ "status": 500, "message": "Ошибка подключения к базе данных","id": null}}'}
 
-GET_EMAIL_DISCR = f"You can enter user's email to display his sending"
+GET_EMAIL_DISCR = f"You must enter the user's email address to display their sending"
 
 
 class PerevalList(ListView):
@@ -44,8 +44,8 @@ class AddedView(views.APIView):
     @swagger_auto_schema(
         manual_parameters=[openapi.Parameter('user__email',
                                 openapi.IN_QUERY, description=GET_EMAIL_DISCR,
-                                required=False, type=openapi.FORMAT_EMAIL),],
-        responses={'200': AddedSerializer, }, )
+                                required=True, type=openapi.TYPE_STRING),],
+        responses={'200': AddedSerializer, })
     def get(self, request, **kwargs):
         query = dict(self.request.GET.items())
         if query.get('user__email', None):
